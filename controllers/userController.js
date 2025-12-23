@@ -36,3 +36,23 @@ export const updateCurrentUser = async (req, res) => {
     res.status(500).json({ message: "Failed to update profile" });
   }
 };
+
+// PATCH /api/users/me/language
+export const updateLanguage = async (req, res) => {
+  const { language } = req.body;
+
+  if (!["uk", "en"].includes(language)) {
+    return res.status(400).json({ message: "Непідтримувана мова" });
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    { language },
+    { new: true }
+  );
+
+  res.json({
+    message: "Мову оновлено",
+    language: user.language
+  });
+};

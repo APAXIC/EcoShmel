@@ -30,4 +30,5 @@ const SensorSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-export default mongoose.model("Sensor", SensorSchema);
+export default mongoose.models.Sensor ||
+mongoose.model("Sensor", SensorSchema);

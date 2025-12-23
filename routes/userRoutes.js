@@ -1,7 +1,8 @@
 import express from "express";
 import {
   getUserById,
-  updateCurrentUser
+  updateCurrentUser,
+  updateLanguage
 } from "../controllers/userController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
@@ -45,7 +46,7 @@ const router = express.Router();
  *     security:
  *       - bearerAuth: []
  *     requestBody:
- *       required: false
+ *       required: true
  *       content:
  *         application/json:
  *           schema:
@@ -64,8 +65,35 @@ const router = express.Router();
  *         description: Невірні дані
  */
 
+/**
+ * @swagger
+ * /users/me/language:
+ *   patch:
+ *     summary: Оновити мову поточного користувача
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               language:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Мову оновлено
+ *       400:
+ *         description: Непідтримувана мова
+ */
+
 // /api/users/me
 router.patch("/me", authMiddleware, updateCurrentUser);
+
+// /api/users/me/language
+router.patch("/me/language", authMiddleware, updateLanguage);
 
 // /api/users/:id
 router.get("/:id", getUserById);
