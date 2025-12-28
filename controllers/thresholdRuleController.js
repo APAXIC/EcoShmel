@@ -1,5 +1,5 @@
 // controllers/thresholdRuleController.js
-import ThresholdRule from "../models/ThresholdRule.js";
+import ThresholdRule from "../models/thresholdRule.js";
 
 // POST /api/rules
 export const createRule = async (req, res) => {

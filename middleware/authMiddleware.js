@@ -1,6 +1,6 @@
 // middlewares/authMiddleware.js
 import { verifyToken } from "../utils/auth.js";
-import User from "../models/User.js";
+import User from "../models/user.js";
 
 export const authMiddleware = async (req, res, next) => {
   try {

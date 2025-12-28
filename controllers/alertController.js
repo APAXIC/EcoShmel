@@ -1,5 +1,5 @@
 // controllers/alertController.js
-import AlertEvent from "../models/AlertEvent.js";
+import AlertEvent from "../models/alertEvent.js";
 
 // GET /api/alerts
 export const getAlerts = async (req, res) => {

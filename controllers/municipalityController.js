@@ -1,5 +1,5 @@
 // controllers/municipalityController.js
-import Municipality from "../models/Municipality.js";
+import Municipality from "../models/municipality.js";
 
 // POST /api/municipalities
 export const createMunicipality = async (req, res) => {

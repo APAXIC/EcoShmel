@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User from "../models/user.js";
 
 export const buildNotificationsForAlert = async (alert) => {
   // const users = await User.find({

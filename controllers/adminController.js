@@ -1,6 +1,6 @@
-import User from "../models/User.js";
-import SensorReading from "../models/SensorReading.js";
-import AlertEvent from "../models/AlertEvent.js";
+import User from "../models/user.js";
+import SensorReading from "../models/sensorReading.js";
+import AlertEvent from "../models/alertEvent.js";
 import {buildNotificationsForAlert} from "../services/notificationService.js";
 
 

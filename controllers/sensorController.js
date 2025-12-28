@@ -1,5 +1,5 @@
 // controllers/sensorController.js
-import Sensor from "../models/Sensor.js";
+import Sensor from "../models/sensor.js";
 
 // POST /api/sensors
 export const createSensor = async (req, res) => {

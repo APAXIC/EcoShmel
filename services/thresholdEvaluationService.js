@@ -1,6 +1,6 @@
-import ThresholdRule from "../models/ThresholdRule.js";
-import AlertEvent from "../models/AlertEvent.js";
-import Sensor from "../models/Sensor.js";
+import ThresholdRule from "../models/thresholdRule.js";
+import AlertEvent from "../models/alertEvent.js";
+import Sensor from "../models/sensor.js";
 import { buildNotificationsForAlert } from "./notificationService.js";
 
 

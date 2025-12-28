@@ -1,5 +1,5 @@
 // controllers/readingController.js
-import SensorReading from "../models/SensorReading.js";
+import SensorReading from "../models/sensorReading.js";
 import { evaluateThresholds } from "../services/thresholdEvaluationService.js";
 import Sensor from "../models/sensor.js";
 
