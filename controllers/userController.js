@@ -1,5 +1,5 @@
 // controllers/userController.js
-import User from "../models/User.js";
+import User from "../models/user.js";
 
 // GET /api/users/:id
 export const getUserById = async (req, res) => {
