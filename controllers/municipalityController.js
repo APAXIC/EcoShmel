@@ -58,3 +58,24 @@ export const updateMunicipality = async (req, res) => {
     res.status(500).json({ message: "Failed to update municipality" });
   }
 };
+
+// GET /api/municipalities/my
+export const getMyMunicipalities = async (req, res) => {
+  try {
+    const coords = req.user.location.coordinates;
+
+    const list = await Municipality.find({
+      geoPolygon: {
+        $geoIntersects: {
+          $geometry: {
+            type: "Point",
+            coordinates: coords
+          }
+        }
+      }
+    });
+    res.json(list);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to find municipalities for your location" });
+  }
+};

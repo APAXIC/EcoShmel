@@ -3,7 +3,8 @@ import {
   createMunicipality,
   getMunicipalities,
   getMunicipalityById,
-  updateMunicipality
+  updateMunicipality,
+  getMyMunicipalities
 } from "../controllers/municipalityController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
@@ -72,6 +73,28 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /municipalities/my:
+ *   get:
+ *     summary: Отримати муніципалітет, де знаходиться користувач
+ *     tags: [Municipalities]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID муніципалітету
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Дані про муніципалітети
+ *       500:
+ *         description: Failed to find municipalities for your location
+ */
+
+/**
+ * @swagger
  * /municipalities/{id}:
  *   patch:
  *     summary: Оновити дані муніципалітету
@@ -99,6 +122,7 @@ const router = express.Router();
 router.post("/", authMiddleware, createMunicipality);
 router.get("/", getMunicipalities);
 router.get("/:id", getMunicipalityById);
+router.get("/my", authMiddleware, getMyMunicipalities);
 router.patch("/:id", updateMunicipality);
 
 export default router;
