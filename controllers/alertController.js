@@ -5,6 +5,7 @@ import AlertEvent from "../models/alertEvent.js";
 export const getAlerts = async (req, res) => {
   try {
     const alerts = await AlertEvent.find()
+      .sort({ triggeredAt: -1 })
       .populate("sensorId", "uid type")
       .populate("municipalityId", "name")
       .populate("ruleId", "metric operator threshold");
@@ -45,5 +46,25 @@ export const createManualAlert = async (req, res) => {
   } catch (error) {
     console.error("Login Error Details:", error);
     res.status(500).json({ message: "Failed to create alert" });
+  }
+};
+
+// PATCH /api/alerts/:id
+export const resolveAlertManual = async (req, res) => {
+  try {
+    const alert = await AlertEvent.findById(req.params.id);
+    if (!alert) return res.status(404).json({ message: "Тривогу не знайдено" });
+    if (alert.resolvedAt) return res.status(400).json({ message: "Тривога вже закрита" });
+
+    alert.resolvedAt = new Date();
+    alert.status = 'resolved';
+    await alert.save();
+
+    // Повідомляємо користувачів про відбій
+    await sendPushNotification(alert, 'resolved');
+
+    res.json({ message: "Тривогу успішно закрито", alert });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

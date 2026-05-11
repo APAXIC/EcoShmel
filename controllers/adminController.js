@@ -1,7 +1,7 @@
 import User from "../models/user.js";
 import SensorReading from "../models/sensorReading.js";
 import AlertEvent from "../models/alertEvent.js";
-import {buildNotificationsForAlert} from "../services/notificationService.js";
+import {sendPushNotification} from "../services/notificationService.js";
 
 
 export const getUsers = async (req, res) => {

@@ -2,7 +2,8 @@ import express from "express";
 import {
   getAlerts,
   getAlertById,
-  createManualAlert
+  createManualAlert,
+  resolveAlertManual
 } from "../controllers/alertController.js";
 
 const router = express.Router();
@@ -67,6 +68,7 @@ const router = express.Router();
 
 router.get("/", getAlerts);
 router.get("/:id", getAlertById);
+router.patch("/:id", resolveAlertManual);
 router.post("/manual", createManualAlert);
 
 export default router;

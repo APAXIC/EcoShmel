@@ -5,15 +5,6 @@ import Sensor from "../models/sensor.js";
 
 // POST /api/readings/ingest
 export const ingest = async (req, res) => {
-  // const { sensorId, value, unit, capturedAt } = req.body;
-  //
-  // const reading = await SensorReading.create({
-  //   sensorId,
-  //   value,
-  //   unit,
-  //   capturedAt: capturedAt ? new Date(capturedAt) : new Date()
-  // });
-
   const { sensorUid, value, unit} = req.body;
 
   const sensor = await Sensor.findOne({ uid: sensorUid });

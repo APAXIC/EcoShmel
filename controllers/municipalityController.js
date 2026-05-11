@@ -76,6 +76,7 @@ export const getMyMunicipalities = async (req, res) => {
     });
     res.json(list);
   } catch (error) {
-    res.status(500).json({ message: "Failed to find municipalities for your location" });
+    console.error("Geo Search Error:", error);
+    res.status(500).json({ message: error.message });
   }
 };

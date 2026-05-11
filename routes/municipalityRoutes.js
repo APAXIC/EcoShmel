@@ -121,8 +121,8 @@ const router = express.Router();
 
 router.post("/", authMiddleware, createMunicipality);
 router.get("/", getMunicipalities);
-router.get("/:id", getMunicipalityById);
 router.get("/my", authMiddleware, getMyMunicipalities);
+router.get("/:id", getMunicipalityById);
 router.patch("/:id", updateMunicipality);
 
 export default router;

@@ -17,7 +17,7 @@ export const getUserById = async (req, res) => {
 // PATCH /api/users/me
 export const updateCurrentUser = async (req, res) => {
   try {
-    const allowed = ["name", "location", "language"];
+    const allowed = ["name", "location", "language", "pushTokens"];
     const updates = {};
 
     for (const field of allowed) {
