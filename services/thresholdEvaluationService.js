@@ -19,7 +19,6 @@ export const evaluateThresholds = async (reading) => {
   for (const rule of rules) {
     const isExceeded = checkRule(reading.value, rule.operator, rule.threshold);
 
-    // Шукаємо активну тривогу для цього правила та сенсора
     const activeAlert = await AlertEvent.findOne({
       sensorId: sensor._id,
       ruleId: rule._id,
@@ -27,7 +26,6 @@ export const evaluateThresholds = async (reading) => {
     });
 
     if (isExceeded && !activeAlert) {
-      // Сценарій А: Поріг перевищено, а тривоги ще немає -> СТВОРЮЄМО
       const newAlert = await AlertEvent.create({
         type: rule.metric,
         sensorId: sensor._id,
@@ -40,16 +38,13 @@ export const evaluateThresholds = async (reading) => {
       });
 
       await sendPushNotification(newAlert, 'triggered');
-      console.log("🔥 Створено нову тривогу:", newAlert._id);
 
     } else if (!isExceeded && activeAlert) {
-      // Сценарій Б: Показники в нормі, але була активна тривога -> ЗАКРИВАЄМО
       activeAlert.resolvedAt = new Date();
       activeAlert.status = 'resolved';
       await activeAlert.save();
 
       await sendPushNotification(activeAlert, 'resolved');
-      console.log("✅ Тривогу закрито:", activeAlert._id);
     }
   }
 };
