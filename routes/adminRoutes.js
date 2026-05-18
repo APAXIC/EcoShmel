@@ -111,7 +111,7 @@ router.post("/alerts", createManualAlert);
 router.get("/alerts/export", exportAlerts);
 router.patch("/alerts/:id/resolve", resolveAlert);
 router.delete("/sensors/:id", deleteSensor);
-router.delete("/users/:id/delete", deleteUser);
-router.patch("/users/:id/update", deleteUser);
+router.delete("/users/delete/:id", deleteUser);
+router.patch("/users/update/:id", deleteUser);
 
 export default router;
