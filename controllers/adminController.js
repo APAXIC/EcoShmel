@@ -12,7 +12,7 @@ export const getUsers = async (req, res) => {
     }
 
     const users = await User.find()
-      .select("_id email role language createdAt");
+      .select("_id name email roles language createdAt");
 
     res.json(users);
   } catch (err) {
