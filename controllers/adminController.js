@@ -28,7 +28,6 @@ export const updateUser = async (req, res) => {
 
     const { name, email, roles } = req.body;
 
-    // Знаходимо та оновлюємо (без пароля, пароль змінюється окремо)
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       { name, email, roles },
@@ -93,11 +92,10 @@ export const getReadings = async (req, res) => {
 
     const readings = await SensorReading.find(filter)
       .populate("sensorId", "uid")
-      .sort({ createdAt: sortOrder });
+      .sort({ capturedAt: sortOrder });
 
     res.json(readings);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Failed to load readings" });
   }
 };
