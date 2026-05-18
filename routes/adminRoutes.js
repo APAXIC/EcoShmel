@@ -7,7 +7,8 @@ import {
   exportAlerts,
   deleteUser,
   deleteSensor,
-  resolveAlert
+  resolveAlert,
+  updateUser
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -109,5 +110,6 @@ router.get("/alerts/export", exportAlerts);
 router.patch("/alerts/:id/resolve", resolveAlert);
 router.delete("/sensors/:id", deleteSensor);
 router.delete("/users/:id", deleteUser);
+router.patch("/users/:id", deleteUser);
 
 export default router;

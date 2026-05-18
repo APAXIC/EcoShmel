@@ -20,9 +20,31 @@ export const getUsers = async (req, res) => {
   }
 };
 
+export const updateUser = async (req, res) => {
+  try {
+    if (!req.user.roles.includes('admin')) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const { name, email, roles } = req.body;
+
+    // Знаходимо та оновлюємо (без пароля, пароль змінюється окремо)
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { name, email, roles },
+      { new: true, runValidators: true }
+    ).select("-passwordHash");
+
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: "Update failed", error: error.message });
+  }
+};
+
 export const deleteUser = async (req, res) => {
   try {
-    // Тільки адмін може видаляти інших
     if (!req.user.roles.includes('admin')) return res.status(403).json({ message: "Forbidden" });
     await User.findByIdAndDelete(req.params.id);
     res.json({ message: "User deleted" });
@@ -33,34 +55,26 @@ export const deleteUser = async (req, res) => {
 
 export const deleteSensor = async (req, res) => {
   try {
-    // 1. Перевірка прав (якщо забули)
     if (!req.user.roles.includes("admin")) {
-      return res.status(403).json({ message: "Тільки адміністратор може видаляти датчики" });
+      return res.status(403).json({ message: "Forbidden" });
     }
 
     const { id } = req.params;
-
-    // 2. Перевіряємо, чи існує датчик
     const sensor = await Sensor.findById(id);
     if (!sensor) {
       return res.status(404).json({ message: "Датчик не знайдено" });
     }
 
-    // 3. ВИДАЛЯЄМО ПОВ'ЯЗАНІ ДАНІ (щоб не було помилок цілісності)
-    // Видаляємо всі показники цього датчика
     await SensorReading.deleteMany({ sensorId: id });
-    // Видаляємо (або анонімізуємо) тривоги, пов'язані з ним
     await AlertEvent.deleteMany({ sensorId: id });
 
-    // 4. Видаляємо сам датчик
     await Sensor.findByIdAndDelete(id);
 
-    res.json({ message: "Датчик та всі пов'язані дані успішно видалені" });
+    res.json({ message: "Sensor is deleted successfully" });
   } catch (error) {
-    // ЦЕЙ ЛОГ ДУЖЕ ВАЖЛИВИЙ: подивіться його в консолі Render
     console.error("DETAILED DELETE ERROR:", error);
     res.status(500).json({
-      message: "Помилка сервера при видаленні датчика",
+      message: "Sensor deleting server error",
       error: error.message
     });
   }
