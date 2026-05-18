@@ -33,11 +33,36 @@ export const deleteUser = async (req, res) => {
 
 export const deleteSensor = async (req, res) => {
   try {
-    const sensor = await Sensor.findByIdAndDelete(req.params.id);
-    if (!sensor) return res.status(404).json({ message: "Sensor not found" });
-    res.json({ message: "Sensor deleted successfully" });
+    // 1. Перевірка прав (якщо забули)
+    if (!req.user.roles.includes("admin")) {
+      return res.status(403).json({ message: "Тільки адміністратор може видаляти датчики" });
+    }
+
+    const { id } = req.params;
+
+    // 2. Перевіряємо, чи існує датчик
+    const sensor = await Sensor.findById(id);
+    if (!sensor) {
+      return res.status(404).json({ message: "Датчик не знайдено" });
+    }
+
+    // 3. ВИДАЛЯЄМО ПОВ'ЯЗАНІ ДАНІ (щоб не було помилок цілісності)
+    // Видаляємо всі показники цього датчика
+    await SensorReading.deleteMany({ sensorId: id });
+    // Видаляємо (або анонімізуємо) тривоги, пов'язані з ним
+    await AlertEvent.deleteMany({ sensorId: id });
+
+    // 4. Видаляємо сам датчик
+    await Sensor.findByIdAndDelete(id);
+
+    res.json({ message: "Датчик та всі пов'язані дані успішно видалені" });
   } catch (error) {
-    res.status(500).json({ message: "Failed to delete sensor" });
+    // ЦЕЙ ЛОГ ДУЖЕ ВАЖЛИВИЙ: подивіться його в консолі Render
+    console.error("DETAILED DELETE ERROR:", error);
+    res.status(500).json({
+      message: "Помилка сервера при видаленні датчика",
+      error: error.message
+    });
   }
 };
 
