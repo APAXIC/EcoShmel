@@ -3,6 +3,7 @@ import {authMiddleware} from "../middleware/authMiddleware.js";
 import {
   getUsers,
   getReadings,
+  importReadings,
   createManualAlert,
   exportAlerts,
   deleteUser,
@@ -105,11 +106,12 @@ router.use(authMiddleware);
 
 router.get("/users", getUsers);
 router.get("/readings", getReadings);
+router.post("/readings/import", importReadings);
 router.post("/alerts", createManualAlert);
 router.get("/alerts/export", exportAlerts);
 router.patch("/alerts/:id/resolve", resolveAlert);
 router.delete("/sensors/:id", deleteSensor);
-router.delete("/users/:id", deleteUser);
-router.patch("/users/:id", deleteUser);
+router.delete("/users/:id/delete", deleteUser);
+router.patch("/users/:id/update", deleteUser);
 
 export default router;

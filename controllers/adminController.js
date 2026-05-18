@@ -86,15 +86,41 @@ export const getReadings = async (req, res) => {
       return res.status(403).json({ message: "Access denied" });
     }
 
-    const { sensorId } = req.query;
-    const filter = sensorId ? { sensorId } : {};
+    const { sensorId, sort = 'desc' } = req.query;
+    const filter = sensorId && sensorId !== 'all' ? { sensorId } : {};
+
+    const sortOrder = sort === 'asc' ? 1 : -1;
 
     const readings = await SensorReading.find(filter)
-      .sort({ createdAt: -1 });
+      .populate("sensorId", "uid")
+      .sort({ createdAt: sortOrder });
 
     res.json(readings);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Failed to load readings" });
+  }
+};
+
+export const importReadings = async (req, res) => {
+  try {
+    if (!req.user.roles.includes("admin")) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    const readings = req.body;
+
+    if (!Array.isArray(readings) || readings.length === 0) {
+      return res.status(400).json({ message: "Invalid data format. Expected an array." });
+    }
+
+    await SensorReading.insertMany(readings);
+
+    res.status(201).json({
+      message: `Successfully imported ${readings.length} readings`
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Import failed", error: err.message });
   }
 };
 
