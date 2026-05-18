@@ -19,6 +19,26 @@ export const getUsers = async (req, res) => {
   }
 };
 
+export const deleteUser = async (req, res) => {
+  try {
+    // Тільки адмін може видаляти інших
+    if (!req.user.roles.includes('admin')) return res.status(403).json({ message: "Forbidden" });
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "User deleted" });
+  } catch (error) {
+    res.status(500).json({ message: "Delete failed" });
+  }
+};
+
+export const deleteSensor = async (req, res) => {
+  try {
+    const sensor = await Sensor.findByIdAndDelete(req.params.id);
+    if (!sensor) return res.status(404).json({ message: "Sensor not found" });
+    res.json({ message: "Sensor deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete sensor" });
+  }
+};
 
 export const getReadings = async (req, res) => {
   try {
@@ -58,6 +78,24 @@ export const createManualAlert = async (req, res) => {
   }
 };
 
+export const resolveAlert = async (req, res) => {
+  try {
+    const alert = await AlertEvent.findByIdAndUpdate(
+      req.params.id,
+      { resolvedAt: new Date(), status: 'resolved' },
+      { new: true }
+    );
+
+    if (!alert) return res.status(404).json({ message: "Alert not found" });
+
+    // Надсилаємо сповіщення про відбій
+    await sendPushNotification(alert, 'resolved');
+
+    res.json(alert);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to resolve alert" });
+  }
+};
 
 export const exportAlerts = async (req, res) => {
   try {

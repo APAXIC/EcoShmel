@@ -4,7 +4,10 @@ import {
   getUsers,
   getReadings,
   createManualAlert,
-  exportAlerts
+  exportAlerts,
+  deleteUser,
+  deleteSensor,
+  resolveAlert
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -103,5 +106,8 @@ router.get("/users", getUsers);
 router.get("/readings", getReadings);
 router.post("/alerts", createManualAlert);
 router.get("/alerts/export", exportAlerts);
+router.patch("/alerts/:id/resolve", resolveAlert);
+router.delete("/sensors/:id", deleteSensor);
+router.delete("/users/:id", deleteUser);
 
 export default router;
