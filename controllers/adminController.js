@@ -1,4 +1,5 @@
 import User from "../models/user.js";
+import Sensor from "../models/sensor.js";
 import SensorReading from "../models/sensorReading.js";
 import AlertEvent from "../models/alertEvent.js";
 import {sendPushNotification} from "../services/notificationService.js";
@@ -70,7 +71,7 @@ export const createManualAlert = async (req, res) => {
       type: "manual"
     });
 
-    await buildNotificationsForAlert(alert);
+    await sendPushNotification(alert, 'triggered');
 
     res.status(201).json(alert);
   } catch (err) {
